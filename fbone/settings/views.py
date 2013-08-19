@@ -57,7 +57,7 @@ def profile():
         db.session.add(user)
         db.session.commit()
 
-        flash('Public profile updated.', 'success')
+        flash('Profiili päivitetty.', 'success')
 
     return render_template('settings/profile.html', user=user,
             active="profile", form=form)
@@ -76,7 +76,7 @@ def password():
         db.session.add(user)
         db.session.commit()
 
-        flash('Password updated.', 'success')
+        flash('Salasana päivitetty.', 'success')
 
     return render_template('settings/password.html', user=user,
             active="password", form=form)

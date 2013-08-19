@@ -17,7 +17,7 @@ setup(
     install_requires=[
         'Flask',
         'Flask-SQLAlchemy',
-        'Flask-WTF',
+        'Flask-WTF<=0.8.4',
         'Flask-Script',
         'Flask-Babel',
         'Flask-Testing',

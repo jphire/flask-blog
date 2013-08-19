@@ -32,6 +32,7 @@ def setup():
     execfile(activate_this, dict(__file__=activate_this))
     local("python setup.py install")
     reset()
+    local("python manage.py run")
 
 
 def d():
