@@ -3,13 +3,13 @@
 {% block body %}
 <h2>Help</h2>
 <div class="accordion" id="accordion2">
-    {% for i in [1, 2, 3] %}
+    {% for i in ['kysymys', 'arvoitus', 'vastaus'] %}
     <div class="accordion-group">
         <div class="accordion-heading">
-            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{ i }}">Question #{{ i }}</a>
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{ i }}">Mikäs #{{ i }} tämä on?</a>
         </div>
         <div id="collapse{{ i }}" class="accordion-body collapse">
-            <div class="accordion-inner">Answer #{{ i }}</div>
+            <div class="accordion-inner">Vastaus: #{{ i }}</div>
         </div>
     </div>
     {% endfor %}

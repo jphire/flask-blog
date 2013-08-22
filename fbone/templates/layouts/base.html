@@ -6,7 +6,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>{% block title %}{{ page_title|default(_('Flask-Blogi')) }}{% endblock %} - blogi</title>
+    <title>{% block title %}{{ page_title|default(_('Flask-Blog')) }}{% endblock %} - blog</title>
     <meta name="description" content="Fbone (Flask bone) is a Flask (Python microframework) template/bootstrap/boilerplate application.">
     <meta name="author" content="Wilson Xu, Janne Laukkanen">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
     {% endblock %}
 
     {% block css_style %}
@@ -34,13 +36,13 @@
         {% block topbar %}
         <div class="navbar">
             <div class="navbar-inner">
-                <div class="container">
+                <div class="container" style="padding-left:10%;padding-right:10%;">
                     <a class='brand' href='{{ url_for('frontend.index') }}'><img src="{{ url_for('static', filename='img/logo.svg') }}" /></a>
+                    <form class="navbar-search pull-left" action="{{ url_for('frontend.search') }}">
+                        <input type='text' class="search-query" name='tags' value='{{ tags|default('') }}' placeholder='Search posts...' />
+                    </form>
 
                     {% if current_user.is_authenticated() %}
-                    <form class="navbar-search pull-left" action="{{ url_for('frontend.search') }}">
-                        <input type='text' class="search-query" name='keywords' value='{{ keywords|default('') }}' placeholder='Search' />
-                    </form>
                     <div class="nav-collapse collapse pull-right">
                         <ul class="nav">
                             {% if current_user.is_admin() %}
@@ -48,15 +50,15 @@
                             {% else %}
                             <li><a href="{{ url_for('user.index') }}">{{ current_user.name }}</a></li>
                             {% endif %}
-                            <li><a href="{{ url_for('settings.profile') }}">Asetukset</a></li>
-                            <li><a href="{{ url_for('frontend.logout') }}">Kirjaudu ulos</a></li>
+                            <li><a href="{{ url_for('settings.profile') }}">Settings</a></li>
+                            <li><a href="{{ url_for('frontend.logout') }}">Log out</a></li>
                         </ul>
                     </div>
                     {% else %}
                     <div class="nav-collapse collapse pull-right">
                         <ul class="nav">
-                            <li><span><a class="btn btn-success" href="{{ url_for('frontend.signup') }}"><strong>Rekisteröidy</strong></a></span></li>
-                            <li><a href="{{ url_for('frontend.login') }}">Kirjaudu</a></li>
+                            <li><span><a class="btn btn-success" href="{{ url_for('frontend.signup') }}"><strong>Sign up</strong></a></span></li>
+                            <li><a href="{{ url_for('frontend.login') }}">Login</a></li>
                         </ul>
                     </div>
                     {% endif %}

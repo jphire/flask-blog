@@ -3,7 +3,7 @@
 from flask import Markup
 
 from flask.ext.wtf import Form, ValidationError
-from flask.ext.wtf import (HiddenField, BooleanField, TextField,
+from flask.ext.wtf import (HiddenField, BooleanField, TextField, TextAreaField,
         PasswordField, SubmitField)
 from flask.ext.wtf import Required, Length, EqualTo, Email
 from flask.ext.wtf.html5 import EmailField
@@ -11,7 +11,6 @@ from flask.ext.wtf.html5 import EmailField
 from ..user import User
 from ..utils import (PASSWORD_LEN_MIN, PASSWORD_LEN_MAX,
         USERNAME_LEN_MIN, USERNAME_LEN_MAX)
-
 
 class LoginForm(Form):
     next = HiddenField()
@@ -40,7 +39,6 @@ class SignupForm(Form):
     def validate_email(self, field):
         if User.query.filter_by(email=field.data).first() is not None:
             raise ValidationError(u'This email is taken')
-
 
 class RecoverPasswordForm(Form):
     email = EmailField(u'Your email', [Email()])

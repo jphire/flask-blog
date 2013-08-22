@@ -4,6 +4,7 @@ from sqlalchemy import Column, types
 from sqlalchemy.ext.mutable import Mutable
 from werkzeug import generate_password_hash, check_password_hash
 from flask.ext.login import UserMixin
+from sqlalchemy.orm import relationship, backref
 
 from ..extensions import db
 from ..utils import get_current_time, SEX_TYPE, STRING_LEN
@@ -77,6 +78,7 @@ class User(db.Model, UserMixin):
     openid = Column(db.String(STRING_LEN), unique=True)
     activation_key = Column(db.String(STRING_LEN))
     created_time = Column(db.DateTime, default=get_current_time)
+    posts = relationship('BlogPost', backref='author')
 
     avatar = Column(db.String(STRING_LEN))
 

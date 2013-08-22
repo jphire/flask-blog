@@ -1,0 +1,9 @@
+{% from "macros/_form.html" import render_form %}
+
+{% set page_title = 'Create new post' %}
+
+{% extends "layouts/base.html" %}
+
+{% block body %}
+{{ render_form(url_for('blogpost.create'), form) }}
+{% endblock %}

@@ -1,0 +1,10 @@
+{% from "macros/_form.html" import render_form %}
+
+{% set page_title = 'Edit post' %}
+
+{% extends "layouts/base.html" %}
+
+{% block body %}
+<h3>Edit post</h3>
+{{ render_form(url_for('blogpost.edit', post_id=post.id), form) }}
+{% endblock %}

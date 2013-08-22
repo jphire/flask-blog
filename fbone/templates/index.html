@@ -1,15 +1,37 @@
-{% extends 'layouts/base.html' %}
+{% from 'macros/_misc.html' import render_pagination, render_post_table %}
 
-{% set page_title = 'Koti' %}
+{% set page_title = 'posts' %}
 
-{% block container %}
-<div class="container">
-    <div class="hero-unit">
-        <h1>Blogi</h1>
-        <p>Tämä on Flask-blogi</p>
-        <p><a href="{{ url_for('frontend.signup')}}" class="btn btn-success btn-large"><strong>Kirjaudu »</strong></a></p>
-    </div>
-    <div class="row">
-    </div>
+{% extends "layouts/base.html" %}
+
+{% block body %}
+<div class="span8 offset1">
+	<div class="pull-left">
+	  <h2>All posts</h2>
+	</div>
+	{% if user.is_authenticated %}
+	<div class="pull-right">
+	  <a href="{{ url_for('blogpost.create') }}"><i class="icon-edit icon-2x pull-right" style="color:#777777"></i>
+	  <span class="color-grey pull-right">write new..</span></a>
+	</div>
+	{% endif %}
+</div>
+<div class="span8 offset1">
+
+    {% if pagination and pagination.pages > 0 %}
+        <p class="color-grey">{% trans total=pagination.total, tags=tags %}<strong>{{ total }}</strong> posts "<strong>{{ tags }}</strong>".{% endtrans %}</p>
+        {{ render_post_table(pagination.items, pagination.page, user, 'zebra-striped') }}
+        {{ render_pagination(pagination, 'frontend.search') }}
+    {% else %}
+        <p>{% trans tags=tags %}No results "<strong>{{ tags }}</strong>".{% endtrans %}</p>
+    {% trans %}
+    <p>Suggestions:</p>
+    <ul>
+       <li>Make sure all words are spelled correctly.</li>
+       <li>Try different tags.</li>
+       <li>Try more general tags.</li>
+    </ul>
+    {% endtrans %}
+    {% endif %}
 </div>
 {% endblock %}

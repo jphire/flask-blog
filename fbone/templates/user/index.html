@@ -1,7 +1,26 @@
+{% from 'macros/_misc.html' import render_pagination, render_post_table %}
+
 {% set page_title = user.name %}
 
 {% extends "layouts/base.html" %}
 
 {% block body %}
-<h2>Hello, {{ user.name }}!</h2>
+<div class="span8">
+<h2>Your posts:</h2>
+    {% if pagination and pagination.pages > 0 %}
+        <p>{% trans total=pagination.total, tags=tags %}<strong>{{ total }}</strong> posts found for: "<strong>{{ tags }}</strong>".{% endtrans %}</p>
+        {{ render_post_table(pagination.items, pagination.page, 'zebra-striped') }}
+        {{ render_pagination(pagination, 'frontend.search') }}
+    {% else %}
+        <p>{% trans tags=tags %}No results found "<strong>{{ tags }}</strong>".{% endtrans %}</p>
+    {% trans %}
+    <p>Suggestions:</p>
+    <ul>
+       <li>Make sure all words are spelled correctly.</li>
+       <li>Try different tags.</li>
+       <li>Try more general tags.</li>
+    </ul>
+    {% endtrans %}
+    {% endif %}
+</div>
 {% endblock %}

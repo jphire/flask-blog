@@ -7,6 +7,8 @@ from flask.ext.babel import Babel
 
 from .config import DefaultConfig
 from .user import User, user
+from .tag import Tag, tag
+from .blogpost import BlogPost, blogpost
 from .settings import settings
 from .frontend import frontend
 from .api import api
@@ -21,6 +23,8 @@ __all__ = ['create_app']
 DEFAULT_BLUEPRINTS = (
     frontend,
     user,
+    blogpost,
+    tag,
     settings,
     api,
     admin,

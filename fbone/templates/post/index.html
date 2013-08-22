@@ -5,11 +5,11 @@
 {% extends "layouts/base.html" %}
 
 {% block body %}
-<div class="span8 offset1">
-<h2>Filtered posts:</h2>
+<div class="span8">
+<h2>All posts</h2>
     {% if pagination and pagination.pages > 0 %}
         <p>{% trans total=pagination.total, tags=tags %}<strong>{{ total }}</strong> posts found for: "<strong>{{ tags }}</strong>".{% endtrans %}</p>
-        {{ render_post_table(pagination.items, pagination.page, user, 'zebra-striped') }}
+        {{ render_post_table(pagination.items, pagination.page, 'zebra-striped') }}
         {{ render_pagination(pagination, 'frontend.search') }}
     {% else %}
         <p>{% trans tags=tags %}No results found "<strong>{{ tags }}</strong>".{% endtrans %}</p>

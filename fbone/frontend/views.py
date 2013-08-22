@@ -8,6 +8,7 @@ from flask.ext.mail import Message
 from flask.ext.babel import gettext as _
 from flask.ext.login import login_required, login_user, current_user, logout_user, confirm_login, login_fresh
 
+from ..blogpost import BlogPost
 from ..user import User, UserDetail
 from ..extensions import db, mail, login_manager, oid
 from .forms import SignupForm, LoginForm, RecoverPasswordForm, ReauthForm, ChangePasswordForm, OpenIDForm, CreateProfileForm
@@ -67,23 +68,33 @@ def index():
     current_app.logger.debug('debug')
 
     if current_user.is_authenticated():
-        return redirect(url_for('user.index'))
+        page = int(request.args.get('page', 1))
+        pagination = BlogPost.query.paginate(page=page, per_page=10)
+        return render_template('index.html', pagination=pagination, user = current_user)
+        #     return redirect(url_for('user.index'))
 
     page = int(request.args.get('page', 1))
-    pagination = User.query.paginate(page=page, per_page=10)
-    return render_template('index.html', pagination=pagination)
+    pagination = BlogPost.query.paginate(page=page, per_page=10)
+    return render_template('index.html', pagination=pagination, user=False)
 
 
 @frontend.route('/search')
 def search():
-    keywords = request.args.get('keywords', '').strip()
+    tags = request.args.get('tags', '').strip()
     pagination = None
-    if keywords:
-        page = int(request.args.get('page', 1))
-        pagination = User.search(keywords).paginate(page, 1)
+    if current_user.is_authenticated():
+        user = current_user
     else:
-        flash(_('Please input keyword(s)'), 'error')
-    return render_template('frontend/search.html', pagination=pagination, keywords=keywords)
+        user = False
+
+    if tags:
+        page = int(request.args.get('page', 1))
+        pagination = BlogPost.search(tags).paginate(page, 10)
+    else:
+        page = int(request.args.get('page', 1))
+        pagination = BlogPost.search('').paginate(page, 10, False)
+        
+    return render_template('frontend/search.html', pagination=pagination, tags=tags, user=user)
 
 
 @frontend.route('/login', methods=['GET', 'POST'])
@@ -102,7 +113,7 @@ def login():
             remember = request.form.get('remember') == 'y'
             if login_user(user, remember=remember):
                 flash(_("Logged in"), 'success')
-            return redirect(form.next.data or url_for('user.index'))
+            return redirect(form.next.data or url_for('.index'))
         else:
             flash(_('Sorry, invalid login'), 'error')
 
