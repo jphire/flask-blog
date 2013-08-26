@@ -90,21 +90,50 @@ def initdb():
     db.session.commit()
 
     tag1 = Tag(
-               tag_name='tag1')
+               tag_name='tag1',
+               user_id=admin.id)
     tag2 = Tag(
-               tag_name='tag2')
+               tag_name='tag2',
+               user_id=admin.id)
+
+    tag3 = Tag(
+               tag_name='tag3',
+               user_id=erkki.id)
+
+    tag4 = Tag(
+               tag_name='tag4',
+               user_id=admin.id)
 
     db.session.add(tag1)
     db.session.add(tag2)
+    db.session.add(tag3)
+    db.session.add(tag4)
     db.session.commit()
 
     tags = [tag1, tag2]
+    tags2 = [tag3]
+    tags3 = [tag4]
+
     post1 = db.session.query(BlogPost).\
         filter_by(id=1).\
         one()
+    
+    post2 = db.session.query(BlogPost).\
+        filter_by(id=10).\
+        one()
+    
+    post3 = db.session.query(BlogPost).\
+        filter_by(id=2).\
+        one()
 
     post1.tags = tags
+    post2.tags = tags2
+    post3.tags = tags3
+
     db.session.add(post1)
+    db.session.add(post2)
+    db.session.add(post3)
+    
     db.session.commit()
 
 manager.add_option('-c', '--config',

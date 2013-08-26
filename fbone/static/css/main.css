@@ -26,6 +26,16 @@
     color:#777777;
 }
 
+#tag-ids {
+}
+
+#add_tag {
+    margin-right: 15px;
+}
+
+#new_tag {
+    margin-bottom: 0px;
+}
 /* 
  * Sticky footer 
  * http://twitter.github.io/bootstrap/examples/sticky-footer.html

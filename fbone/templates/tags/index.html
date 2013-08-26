@@ -1,0 +1,34 @@
+{% from 'macros/_misc.html' import render_pagination, render_tag_table %}
+
+{% set page_title = 'tags' %}
+
+{% extends "layouts/base.html" %}
+
+{% block body %}
+<div class="span8">
+<h2>All tags</h2>
+    {% for tag in all_tags %}
+      <span id="{{ tag.id }}" class="label">{{ tag.tag_name }} | <a href="{{ url_for('tag.destroy', tag_id=tag.id) }}"><i class="icon-remove" onclick="return confirm('You sure?')"></i></a></span>
+    {% endfor %}
+</div>
+{% endblock %}
+
+<script type="text/javascript">
+    console.log("jj");
+    $(document).on('mouseover', '.label', function(e) {
+        console.log(e);
+        $(this).children('.label').addClass('active');
+        $(this).append('<i class="icon-remove"></i>');
+        $(this).on('mouseout', function() {
+            console.log(e);
+            $(this).children('.label').removeClass('active')
+            $(this).children('i').remove();    
+        })
+    });
+
+    $(document).on('mouseout', '.label.active', function(e) {
+        console.log(e);
+        $(this).children('.label').removeClass('active')
+        $(this).children('i').remove();
+    });
+</script>

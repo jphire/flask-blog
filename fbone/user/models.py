@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import sqlalchemy as sa
 from sqlalchemy import Column, types
 from sqlalchemy.ext.mutable import Mutable
 from werkzeug import generate_password_hash, check_password_hash
@@ -50,16 +50,16 @@ class UserDetail(db.Model):
 
     __tablename__ = 'user_details'
 
-    id = Column(db.Integer, primary_key=True)
+    id = sa.Column(db.Integer, primary_key=True)
 
-    age = Column(db.Integer)
-    phone = Column(db.String(STRING_LEN))
-    url = Column(db.String(STRING_LEN))
-    deposit = Column(db.Numeric)
-    location = Column(db.String(STRING_LEN))
-    bio = Column(db.String(STRING_LEN))
+    age = sa.Column(db.Integer)
+    phone = sa.Column(sa.Unicode(STRING_LEN))
+    url = sa.Column(sa.Unicode(STRING_LEN))
+    deposit = sa.Column(sa.Numeric)
+    location = sa.Column(sa.Unicode(STRING_LEN))
+    bio = sa.Column(sa.Unicode(STRING_LEN))
 
-    sex_code = db.Column(db.Integer)
+    sex_code = sa.Column(db.Integer)
 
     @property
     def sex(self):
@@ -73,16 +73,17 @@ class User(db.Model, UserMixin):
     __tablename__ = 'users'
 
     id = Column(db.Integer, primary_key=True)
-    name = Column(db.String(STRING_LEN), nullable=False, unique=True)
-    email = Column(db.String(STRING_LEN), nullable=False, unique=True)
-    openid = Column(db.String(STRING_LEN), unique=True)
-    activation_key = Column(db.String(STRING_LEN))
+    name = Column(sa.Unicode(STRING_LEN), nullable=False, unique=True)
+    email = Column(sa.Unicode(STRING_LEN), nullable=False, unique=True)
+    openid = Column(sa.Unicode(STRING_LEN), unique=True)
+    activation_key = Column(sa.Unicode(STRING_LEN))
     created_time = Column(db.DateTime, default=get_current_time)
     posts = relationship('BlogPost', backref='author')
+    created_tags = relationship('Tag', backref='tag_creator')
 
-    avatar = Column(db.String(STRING_LEN))
+    avatar = Column(sa.Unicode(STRING_LEN))
 
-    _password = Column('password', db.String(STRING_LEN), nullable=False)
+    _password = Column('password', db.String(100), nullable=False)
 
     def _get_password(self):
         return self._password

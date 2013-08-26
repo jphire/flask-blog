@@ -69,12 +69,12 @@ def index():
 
     if current_user.is_authenticated():
         page = int(request.args.get('page', 1))
-        pagination = BlogPost.query.paginate(page=page, per_page=10)
+        pagination = BlogPost.query.order_by('id').paginate(page=page, per_page=10)
         return render_template('index.html', pagination=pagination, user = current_user)
         #     return redirect(url_for('user.index'))
 
     page = int(request.args.get('page', 1))
-    pagination = BlogPost.query.paginate(page=page, per_page=10)
+    pagination = BlogPost.query.order_by('id').paginate(page=page, per_page=10)
     return render_template('index.html', pagination=pagination, user=False)
 
 

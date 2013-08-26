@@ -12,6 +12,7 @@ from ..extensions import db
 
 from ..user.models import User
 from .models import BlogPost
+from ..tag.models import Tag
 
 from .forms import CreateBlogPostForm, EditBlogPostForm
 
@@ -68,16 +69,33 @@ def edit(post_id):
     if not current_user.is_authenticated():
         return redirect(url_for('frontend.index'))
 
-    form = EditBlogPostForm(next=request.args.get('next'), obj=post)
+    form = EditBlogPostForm(request.form, obj=post)
+    form.tags.choices = [(g.id, g.tag_name) for g in Tag.query.filter(Tag.user_id==current_user.id).order_by('tag_name')]
+    form.tags.data = [p.id for p in post.tags]
 
     if form.validate_on_submit():
-        # post.tags = Tag()
         post.headline = form.headline.data
         post.body = form.body.data
+        post.tags = Tag.query.filter(Tag.id.in_(request.form.getlist('tags'))).all()
 
         db.session.add(post)
         db.session.commit()
-        flash(_('Post saved!'), 'success')
+        flash(_('Post updated!'), 'success')
+        return redirect(url_for('frontend.index'))
+    
+    return render_template('post/edit.html', form=form, post=post)
+
+@login_required
+@blogpost.route('/<int:post_id>/destroy', methods=['GET','POST'])
+def destroy(post_id):
+    post = BlogPost.get_by_id(post_id)
+    if not current_user.is_authenticated():
+        return redirect(url_for('frontend.index'))
+    else:
+        db.session.delete(post)
+        db.session.commit()
+        flash(_('Post removed!'), 'success')
         return redirect(url_for('frontend.index'))
 
-    return render_template('post/edit.html', form=form, post=post)
+    flash(_('Could not remove post!'), 'error')
+    return redirect(url_for('frontend/index'))

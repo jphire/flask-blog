@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 
+import sqlalchemy as sa
+
 from sqlalchemy import Column, Integer, String, types, ForeignKey, Table, Text
 from sqlalchemy.orm import relationship, backref
-from sqlalchemy.ext.mutable import Mutable
-from flask.ext.login import UserMixin
+
+from flask.ext.sqlalchemy import SQLAlchemy, BaseQuery
+from sqlalchemy_searchable import Searchable, SearchQueryMixin
+from sqlalchemy_utils.types import TSVectorType
+from sqlalchemy_searchable import search as ft_search
 
 from ..extensions import db
 
@@ -12,32 +17,28 @@ post_tags = Table('post_tags', db.Model.metadata,
     Column('tag_id', Integer, ForeignKey('tags.id'))
 )
 
-class BlogPost(db.Model):
-    __tablename__ = 'posts'
+# for full-text search
+class PostQuery(BaseQuery, SearchQueryMixin):
+    pass
 
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id'))
-    headline = Column(String(255), nullable=False)
-    body = Column(Text)
+class BlogPost(db.Model, Searchable):
+    query_class = PostQuery
+    __tablename__ = 'posts'
+    __searchable_columns__ = ['headline', 'body']
+
+    id = sa.Column(sa.Integer, primary_key=True)
+    user_id = sa.Column(sa.Integer, ForeignKey('users.id'))
+    headline = sa.Column(sa.Unicode(255), nullable=False)
+    body = sa.Column(sa.UnicodeText)
+    search_vector = sa.Column(TSVectorType)
+
     # many to many BlogPost<->Tag
     tags = relationship('Tag', secondary=post_tags, backref='posts')
 
     @classmethod
-    def search(cls, tags):
-        criteria = []
-        if tags != '':
-            for tag in tags.split():
-                tag = '%' + tag + '%'
-                criteria.append(db.or_(
-                    BlogPost.headline.ilike(tag),
-                ))
-        else:
-            return cls.query
-
-        q = reduce(db.and_, criteria)
-        return cls.query.filter(q)
+    def search(cls, query_str):
+        return BlogPost.query.search(query_str)
 
     @classmethod
     def get_by_id(cls, post_id):
         return cls.query.filter_by(id=post_id).first_or_404()
-

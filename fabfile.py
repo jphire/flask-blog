@@ -34,6 +34,15 @@ def setup():
     reset()
     local("python manage.py run")
 
+def shell():
+    local("virtualenv env")
+    activate_this = "env/bin/activate_this.py"
+    execfile(activate_this, dict(__file__=activate_this))
+    reset()
+    from fbone.user import *
+    from fbone.blogpost import *
+    from fbone.tag import *
+    local("python manage.py shell")
 
 def d():
     """

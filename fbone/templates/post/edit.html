@@ -5,6 +5,29 @@
 {% extends "layouts/base.html" %}
 
 {% block body %}
-<h3>Edit post</h3>
-{{ render_form(url_for('blogpost.edit', post_id=post.id), form) }}
+<div class="span8 offset1">
+  <h3>Edit post</h3>
+  {{ render_form(url_for('blogpost.edit', post_id=post.id), form) }}
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="{{ url_for('static', filename='chosen/chosen.jquery.js') }}"></script>
+<script>
+  $("#tags").chosen();
+
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+	// $('#add_tag').on('click', function() {
+	// 	var tag_name = $('#new_tag').val();
+	// 	$.post('../../tag/new', {post_id:{{ post.id }}, tag_name:tag_name }, function(ret) {
+	// 		if(ret !== 'error') {
+	// 			alert('New tag ' + ret + ' created');
+	// 		} else {
+	// 			alert("Couldn't create tag!");
+	// 		}
+	// 	});
+	// });
+
+</script>
+
 {% endblock %}

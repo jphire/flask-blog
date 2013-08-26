@@ -46,6 +46,7 @@
     {% for post in posts %}
     <div class="well">
         {% if user and post.author.name==user.name  %}
+        <a href="{{ url_for('blogpost.destroy', post_id=post.id) }}"><i class="icon-remove icon-2x pull-right" style="color:#777777"></i></a>
         <a href="{{ url_for('blogpost.edit', post_id=post.id) }}"><i class="icon-edit icon-2x pull-right" style="color:#777777"></i></a>
         {% endif %}
         <h3>{{ loop.index + (page*10-10) }}: <a href="{{ url_for('blogpost.show', post_id=post.id) }}">{{ post.headline }}</a>
